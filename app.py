@@ -1,46 +1,55 @@
 import sqlite3
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, url_for, redirect
 
 app = Flask(__name__)
 
 
-
-@app.route("/", methods = ['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'])
 def index():
-    conn = sqlite3.connect('finances.db')
-    cursor = conn.cursor()
-
     if request.method == 'POST':
         insert_into()
+        return redirect(url_for('index'))
+
+    conn = sqlite3.connect('finances.db')
+    cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM finances")
     rows = cursor.fetchall()
 
-
-
-
-
     conn.close()
-    return render_template("index.html", expenses = rows)
-
+    return render_template("index.html", expenses=rows)
 
 
 def create_table():
     conn = sqlite3.connect('finances.db')
     cursor = conn.cursor()
 
-    table_creation_query =  """
+    table_creation_query = """
                            CREATE TABLE IF NOT EXISTS finances
                            (
-                               ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                               NAME TEXT NOT NULL,
-                               AMOUNT INTEGER NOT NULL,
-                               CATEGORY TEXT NOT NULL,
-                               DATE TEXT NOT NULL
+                               ID \
+                               INTEGER \
+                               PRIMARY \
+                               KEY \
+                               AUTOINCREMENT,
+                               NAME \
+                               TEXT \
+                               NOT \
+                               NULL,
+                               AMOUNT \
+                               INTEGER \
+                               NOT \
+                               NULL,
+                               CATEGORY \
+                               TEXT \
+                               NOT \
+                               NULL,
+                               DATE \
+                               TEXT \
+                               NOT \
+                               NULL
                            ); """
-
-
 
     cursor.execute(table_creation_query)
 
@@ -63,6 +72,15 @@ def insert_into():
                    (name, amount, category, date))
     conn.commit()
 
+
+@app.route('/delete/<int:id>', methods=['POST'])
+def delete(id):
+    conn = sqlite3.connect('finances.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM finances WHERE ID = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
