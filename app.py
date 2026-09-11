@@ -17,8 +17,10 @@ def index():
     cursor.execute("SELECT * FROM finances")
     rows = cursor.fetchall()
 
+    total = sum(row[2] for row in rows)
+
     conn.close()
-    return render_template("index.html", expenses=rows)
+    return render_template("index.html", expenses=rows, total=total)
 
 
 def create_table():
