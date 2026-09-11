@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expenses</title>
+</head>
+<body>
+    <table>
+        <tr> <th> Name</th> <th> Amount</th> <th> Category</th> <th> Date </th></tr>
+        {% for x in expenses %}
+           <tr> <td> {{ x[1] }}</td> <td> {{ x[2] }}</td> <td> {{ x[3] }}</td> <td> {{ x[4] }}</td></tr>
+        {% endfor %}
+    </table>
+
+    <h3> Enter Information </h3>
+    <form method="post">
+        <input type="text" name = "name" required>
+        <input type = "number" name = "amount" required>
+        <input type = "text" name = "category" required>
+        <input type = "text" name = "date" required>
+        <input type="submit" name = "Submit">
+        <br><br>
+    </form>
+</body>
+</html>
